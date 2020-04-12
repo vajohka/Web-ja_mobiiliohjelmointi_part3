@@ -17,14 +17,15 @@ let henkilot = [
     {
         name: "Arto Järvinen",
         number: "040-1286247",
-        id: 1,
+        id: 3,
     },
     {
         name: "Lea Kutvonen",
         number: "040-1286248",
-        id: 1,
+        id: 4,
     }
 ]
+
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
@@ -32,6 +33,17 @@ app.get('/', (req, res) => {
 
 app.get('/api/persons', (req, res) => {
     res.json(henkilot)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const henkilo = henkilot.filter(henkilo => henkilo.id === id)
+
+    if (henkilo) {
+        response.json(henkilo)
+    } else {
+        response.status(404).end
+    }
 })
 
 const port = 3001
