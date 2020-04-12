@@ -38,6 +38,7 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     const henkilo = henkilot.filter(henkilo => henkilo.id === id)
+    console.log(henkilo)
 
     if (henkilo) {
         response.json(henkilo)
@@ -51,6 +52,39 @@ app.delete('/api/persons/:id', (request, response) => {
     henkilot = henkilot.filter(henkilo => henkilo.id !== id)
 
     response.status(204).end()
+})
+
+app.post('/api/persons/', (request, response) => {
+    const body = request.body
+    const nimi = String(body.name)
+
+    const henkiloNimi = henkilot.filter(henkiloNimi => henkiloNimi.name === nimi)
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'Name or number is missing'
+        })
+    }
+
+    /*if (henkiloNimi) {
+        return response.status(400).json({
+            error: 'Name must be unique'
+        })
+    }*/
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+    
+    const henkilo = {
+        name: body.name,
+        number: body.number,
+        id: getRandomInt(99999999)
+    }
+
+    henkilot = henkilot.concat(henkilo)
+
+    response.json(henkilo)
 })
 
 const port = 3001
