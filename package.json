@@ -1,0 +1,27 @@
+{
+  "name": "osa3tehtavat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vajohka/web-ja-mobiili_osa3_tehtavat.git"
+  },
+  "author": "Valtter Karppinen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vajohka/web-ja-mobiili_osa3_tehtavat/issues"
+  },
+  "homepage": "https://github.com/vajohka/web-ja-mobiili_osa3_tehtavat#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
