@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
+app.use(cors())
 
 let henkilot = [
     {
@@ -87,7 +89,7 @@ app.post('/api/persons/', (request, response) => {
     response.json(henkilo)
 })
 
-const port = 3001
+const port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
 })   
