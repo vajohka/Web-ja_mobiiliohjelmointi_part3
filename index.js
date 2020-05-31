@@ -1,67 +1,41 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const Henkilo = require('./models/henkilo')
 
 app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
-
-let henkilot = [
-    {
-        name: "Arto Hellas",
-        number: "040-1286245",
-        id: 1,
-    },
-    {
-        name: "Martti Tienari",
-        number: "040-1286246",
-        id: 2,
-    },
-    {
-        name: "Arto Järvinen",
-        number: "040-1286247",
-        id: 3,
-    },
-    {
-        name: "Lea Kutvonen",
-        number: "040-1286248",
-        id: 4,
-    }
-]
 
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/persons', (req, res) => {
-    res.json(henkilot)
+app.get('/api/persons', (request, response) => {
+    Henkilo.find({}).then(henkilot => {
+        response.json(henkilot.map(henkilo => henkilo.toJSON()))
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const henkilo = henkilot.filter(henkilo => henkilo.id === id)
-    console.log(henkilo)
-
-    if (henkilo) {
-        response.json(henkilo)
-    } else {
-        response.status(404).end
-    }
+    Henkilo.findById(request.params.id).then(note => {
+        response.json(note.toJSON())
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    henkilot = henkilot.filter(henkilo => henkilo.id !== id)
+    Henkilo.findByIdAndRemove(request.params.id)
+        .then(result => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
+    })
 
-    response.status(204).end()
-})
 
 app.post('/api/persons/', (request, response) => {
     const body = request.body
-    const nimi = String(body.name)
-
-    const henkiloNimi = henkilot.filter(henkiloNimi => henkiloNimi.name === nimi)
 
     if (!body.name || !body.number) {
         return response.status(400).json({
@@ -79,15 +53,15 @@ app.post('/api/persons/', (request, response) => {
         return Math.floor(Math.random() * Math.floor(max));
     }
     
-    const henkilo = {
+    const henkilo = new Henkilo({
         name: body.name,
         number: body.number,
         id: getRandomInt(99999999)
-    }
+    })
 
-    henkilot = henkilot.concat(henkilo)
-
-    response.json(henkilo)
+    henkilo.save().then(savedHenkilo => {
+        response.json(savedHenkilo.toJSON())
+    })
 })
 
 const port = process.env.PORT || 3001
